@@ -1,24 +1,31 @@
 FROM python:3.7
+# Adding trusting keys to apt for repositories
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# Adding Google Chrome to the repositories
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+# Updating apt to see and install Google Chrome
+RUN apt-get -y update
+# Magic happens
+RUN apt-get install -y google-chrome-stable
 
-COPY Requirements.txt Requirements.txt 
-RUN pip install -r ./Requirements.txt 
+
+# Installing Unzip
+RUN apt-get install -yqq unzip
+# Download the Chrome Driver
+RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+# Unzip the Chrome Driver into /usr/local/bin directory
+RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+# Set display port as an environment variable
+ENV DISPLAY=:99
 
 COPY . /app
-
-#installing google chrome
-RUN apt-get update 
-RUN apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 libfontconfig1 libgdk-pixbuf2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libxss1 fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils libgbm1
-
-RUN dpkg -i /app/chrome/google-chrome.deb
-
-
-ENV APP_HOME /app
+WORKDIR /app
+RUN pip install --upgrade pip
+RUN pip install -r Requirements.txt
 
 ENV FLASK_APP=time_scheduler.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5000
-
-WORKDIR ${APP_HOME}
 
 EXPOSE 5000
 

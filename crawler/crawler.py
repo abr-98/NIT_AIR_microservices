@@ -27,12 +27,16 @@ def crawler_meteoblue():
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+meteoblue_path,
-            "directory_upgrade": True}
+            "directory_upgrade": True,
+            "profile.default_content_settings":{"images": 2}}
     
     chromeOptions.add_experimental_option("prefs",prefs)
+
     chromeOptions.add_argument("--headless")
+    chromeOptions.add_argument("--no-sandbox")
+    chromeOptions.add_argument("--disable-dev-shm-usage")
     
-    driver = webdriver.Chrome(executable_path='chrome/chromedriver',
+    driver = webdriver.Chrome(#executable_path='chrome/chromedriver',
                               chrome_options=chromeOptions)
     
     driver.get("https://www.meteoblue.com/en/products/historyplus/download/durgapur_india_1272175")
@@ -114,12 +118,16 @@ def crawler_IOT():
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+device_path,
-            "directory_upgrade": True}
+            "directory_upgrade": True,
+            "profile.default_content_settings":{"images": 2}}
     
     chromeOptions.add_experimental_option("prefs",prefs)
+
     chromeOptions.add_argument("--headless")
+    chromeOptions.add_argument("--no-sandbox")
+    chromeOptions.add_argument("--disable-dev-shm-usage")
     
-    driver = webdriver.Chrome(executable_path='chrome/chromedriver',
+    driver = webdriver.Chrome(#executable_path='chrome/chromedriver',
                               chrome_options=chromeOptions)
     
     driver.get("http://iotbuilder.in/nit-dp/dashboard.php")
