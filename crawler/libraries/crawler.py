@@ -27,7 +27,7 @@ def crawler_meteoblue():
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+meteoblue_path,
-            "directory_upgrade": True}}
+            "directory_upgrade": True}
     
     chromeOptions.add_experimental_option("prefs",prefs)
     chromeOptions.add_argument("--headless")

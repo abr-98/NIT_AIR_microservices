@@ -1,3 +1,4 @@
+import os
 import pickle
 import numpy as np
 import pandas as pd
@@ -7,7 +8,7 @@ from sklearn.metrics import accuracy_score
 
 eucledine=lambda a,b,c,d:round(((a-c)**2+(b-d)**2)**0.5,2)
 
-with open("./logs/model.pickle","rb") as f:
+with open("./libraries/model.pickle","rb") as f:
     model=pickle.load(f)
    
     
