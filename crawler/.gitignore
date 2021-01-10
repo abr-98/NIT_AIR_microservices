@@ -1,1 +1,3 @@
-/download
+/download/Meteoblue_data/*
+/download/IOT_data/*
+/__pycache__
