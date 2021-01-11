@@ -79,7 +79,7 @@ def Extrapolate(grid,dev,rc):
     dev_feat = {}
     pre_processed=dict(grid_feat.T)
     for k, v in pre_processed.items():
-        dev_feat[k] = dict(v)
+        dev_feat[str(k)] = dict(v)
     
     return (
             dev_feat,  #Actual Grid Features in nested dict format
