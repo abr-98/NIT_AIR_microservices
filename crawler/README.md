@@ -9,7 +9,7 @@
     # {this will build the image according to the "Dockerfile" in here and name the image "crawler" & the "." is important}
 
 2. Run the image
-    + docker run --name=crawler -d -p 5000:5000 -v ${pwd}:/app  --privileged crawler
+    + docker run --name=crawler -d -v ${pwd}:/app  --privileged crawler
     + while deploying add a aurgument --restart=always to make the container restart itself after a reboot
 
     # {this will run docker image "crawler",also name the running container as "crawler" and do expose port 5000 to localhost & to its local network & we need to connect to docker network later and this is to be called from other containers for crawl requests & database connectivity.
