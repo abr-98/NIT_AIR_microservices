@@ -58,7 +58,7 @@ def store_to_db_and_log_to_file(date,hour,record):
 
 
     
-
+print("RUNNING FRESH CRAWLER & DATABASE STORE PROCEDURE.....\n\n")
 while True:
     if check_if_on_past_record_hour()==False: #means this hour data is not stored previously
         date,hour,effective_date,effective_hour=get_date_hour_and_effective_date_hour()
