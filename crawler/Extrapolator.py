@@ -100,10 +100,10 @@ def timezone(hour):
         return 'Evening'
 
 #Get database record object for a date & hour................................
-def get_database_record(date,hour):
+def get_database_record(date,hour,effective_date,effective_hour):
 
     #df=pd.read_csv('./logs/crawl_data_test.csv') #<--Here call the Crawler
-    df=crawler(date+" "+hour)#.................................................
+    df=crawler(effective_date+" "+effective_hour)#...so for hh hour call we are seeing hh-1 hour data.and eff_date works for 0th hour
     
 
     grid_dev=[device_pos[d] for d in df.Device] #Current device positions which are active
