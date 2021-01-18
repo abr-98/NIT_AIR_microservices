@@ -10,14 +10,15 @@
 
 2. Create the image
     + docker create --name=crawler -v ${pwd}:/app  --privileged crawler
+      # for testing volume is mounted
     + while deploying add a aurgument --restart=always to make the container restart itself after a reboot
 
-    # {this will run docker image "crawler",also name the running container as "crawler" and do expose port 5000 to localhost & to its local network & we need to connect to docker network later and this is to be called from other containers for crawl requests & database connectivity.
+    # {this will run docker image "crawler",also name the running container as "crawler" and do not expose any port to localhost & to its local network its a automatic crawlling service.
 
 3. Connect to Internal Software Network (network name: mynetwork)
     + docker network connect --alias=crawler mynetwork crawler
 
-    # {this will connect the container to the internal soft-network with hostname= "crawler" so we can send emailing requests to the container from other containers in the same network}
+    # {this will connect the container to the internal soft-network with hostname= "crawler" so it can send emailing requests to "mail" container in the same network and store data in "mongo" container}
 
 4. Run the image
     + docker start crawler
