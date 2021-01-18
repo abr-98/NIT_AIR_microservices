@@ -22,14 +22,14 @@ feat_cols=[
 ]
 
 #Device Cordinate Mappings
-device_pos={'Device-1':(1,3),
-            'Device-2':(0,0),
-            'Device-3':(3,2),
+device_pos={'Device-1':(0,0),
+            'Device-2':(0,1),
+            'Device-3':(0,3), #this pos will change
             'Device-4':(2,1), #Till here every thing is OK below are arbtary location please confirm.
             
-            'Device-5':(2,3), #check
-            'Device-6':(3,0), #check
-            'Device-7':(3,3)  #check
+            'Device-5':(2,2), #check
+            'Device-6':(2,3), #check
+            'Device-7':(3,2)  #check
            }
 
 #....................................................................................................#
