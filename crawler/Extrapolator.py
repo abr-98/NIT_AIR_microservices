@@ -105,6 +105,9 @@ def get_database_record(date,hour,effective_date,effective_hour):
     #df=pd.read_csv('./logs/crawl_data_test.csv') #<--Here call the Crawler
     df=crawler(effective_date+" "+effective_hour)#...so for hh hour call we are seeing hh-1 hour data.and eff_date works for 0th hour
     
+    if df.shape[0]==0: #dropna drops everything so most probably meteoblue site is down currently...
+        print("Meteoblue site is probably down or no device is running at this time")
+        raise Exception("Meteoblue site is probably down or no device is running at this time")
 
     grid_dev=[device_pos[d] for d in df.Device] #Current device positions which are active
 
