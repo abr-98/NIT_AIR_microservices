@@ -39,5 +39,3 @@ def send_email():
     app.logger.warning(f'mail has been send with msg: {msg} to {emails}')
     smtp.quit()
     return "Done"
-
-app.run()
