@@ -1,4 +1,10 @@
 /**/__pycache__
-/crawler/download
-/crawler/logs/ts_log.txt
-/mongo/mydata
+
+/crawler/download/IOT_data/*
+!/crawler/download/IOT_data/.gitkeep
+
+/crawler/download/Meteoblue_data/*
+!/crawler/download/Meteoblue_data/.gitkeep
+
+/mongo/mydata/*
+!/mongo/mydata/.gitkeep
