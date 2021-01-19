@@ -11,6 +11,10 @@
 2. Create the image
     + docker create --name=crawler -v ${pwd}:/app  --privileged crawler
       # for testing volume is mounted
+
+    + docker create --name=crawler --privileged crawler
+      # for deployment volume is not mounted
+
     + while deploying add a aurgument --restart=always to make the container restart itself after a reboot
 
     # {this will run docker image "crawler",also name the running container as "crawler" and do not expose any port to localhost & to its local network its a automatic crawlling service.
