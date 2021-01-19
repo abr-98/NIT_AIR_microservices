@@ -21,4 +21,4 @@
 
 
 # Example EMAIL Send Request.
-mail:5000/notify?emails=abcdef@gmail.com_ghijk@gmail.com&message=hello this is a test email
+http://mail:5000/notify?message=hello this is a test email

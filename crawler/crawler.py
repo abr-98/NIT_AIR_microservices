@@ -3,7 +3,6 @@ import requests
 import numpy as np
 import pandas as pd
 from selenium import webdriver
-from email_list import report_emails
 
 
 curr_dir=os.getcwd()
@@ -50,7 +49,7 @@ def crawler_meteoblue():
             except:
                 if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
                     error_message="No internet OR Meteoblue site Changed fix the crawler immediately and restart the container"
-                    requests.get(f"http://mail:5000/notify?emails={report_emails}&message={error_message}")
+                    requests.get(f"http://mail:5000/notify?message={error_message}")
                     raise Exception(error_message)
 
     l=['//*[@id="params"]/optgroup[2]/option[3]',

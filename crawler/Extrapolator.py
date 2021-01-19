@@ -2,7 +2,6 @@ import pickle
 import numpy as np
 import pandas as pd
 from crawler import crawler
-from email_list import report_emails
 from sklearn.metrics import accuracy_score
 
 eucledine=lambda a,b,c,d:round(((a-c)**2+(b-d)**2)**0.5,2)

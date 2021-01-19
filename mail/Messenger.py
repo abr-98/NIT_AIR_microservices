@@ -6,6 +6,11 @@ app = Flask(__name__)
 sender="cityprobe.report@gmail.com"
 password="cityprobe123#"
 
+def get_emails_to_send_mail_to():
+    with open('email_list.txt','r') as f:
+        emails=f.read().split("\n")
+    return emails
+
 
 @app.route("/")
 def home():
@@ -14,7 +19,7 @@ def home():
 
 @app.route('/notify') #notify end-point
 def send_email():
-    emails=request.args.get('emails').split('_') #provide email seperated by '_' > abc@d.com_efg@f.com_xyz@p.com
+    emails=get_emails_to_send_mail_to()#emails are provided in email_list.txt file.
     msg=request.args.get('message') #parameter message
 
     #Connect to email server
@@ -31,6 +36,8 @@ def send_email():
 
         smtp.sendmail(sender, email_id, message) 
     #After sending all mails quit the connection
-    app.logger.warning(f'mail has been send with msg: {msg}')
+    app.logger.warning(f'mail has been send with msg: {msg} to {emails}')
     smtp.quit()
     return "Done"
+
+app.run()

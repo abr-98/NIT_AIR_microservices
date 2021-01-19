@@ -4,7 +4,6 @@ import requests
 import pymongo
 from pymongo import MongoClient
 from Extrapolator import get_database_record
-from email_list import report_emails
 
 
 mongo_client=MongoClient("mongo",27017)
@@ -67,13 +66,13 @@ while True:
         except:
             error_message="Some issue with Extrapolator or Crawler....please Fix soon...retrying for now"
             print(error_message)
-            requests.get(f"http://mail:5000/notify?emails={report_emails}&message={error_message}")
+            requests.get(f"http://mail:5000/notify?message={error_message}")
             print("Wait for 10 mins to resolve")
             sleep(10*60) #wait for 10 minutes
             continue
 
         
-        print(record) #stroe in db here
+        print(record) #store in db here
         store_to_db_and_log_to_file(date,hour,record)
         
     wait_for_next_hour()
