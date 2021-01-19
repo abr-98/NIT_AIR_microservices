@@ -35,7 +35,7 @@ def crawler_meteoblue():
     driver.get("https://www.meteoblue.com/en/products/historyplus/download/durgapur_india_1272175")
 
     driver.find_element_by_xpath("/html/body/div[2]/div/form/div/input").click() #accept and continue
-    button=driver.find_element_by_class_name("bloo")
+    #button=driver.find_element_by_class_name("bloo")
 
     ######Click on checkbox#########
     
@@ -50,7 +50,7 @@ def crawler_meteoblue():
             except:
                 if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
                     error_message="No internet OR Meteoblue site Changed fix the crawler immediately and restart the container"
-                    requests.get(f"mail:5000/notify?emails={report_emails}&message={error_message}")
+                    requests.get(f"http://mail:5000/notify?emails={report_emails}&message={error_message}")
                     raise Exception(error_message)
 
     l=['//*[@id="params"]/optgroup[2]/option[3]',
@@ -120,8 +120,8 @@ def crawler_IOT():
     driver = webdriver.Chrome(chrome_options=chromeOptions)
     driver.get("http://iotbuilder.in/nit-dp/dashboard.php")
     
-    button=driver.find_element_by_class_name("col-md-12")
-    butt=button.find_element_by_class_name("text-center")
+    #button=driver.find_element_by_class_name("col-md-12")
+    #butt=button.find_element_by_class_name("text-center")
     links = driver.find_elements_by_link_text('Save')
     for link in links:
         link.click()

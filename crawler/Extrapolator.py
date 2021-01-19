@@ -22,14 +22,14 @@ feat_cols=[
 ]
 
 #Device Cordinate Mappings
-device_pos={'Device-1':(1,3),
-            'Device-2':(0,0),
-            'Device-3':(3,2),
+device_pos={'Device-1':(0,0),
+            'Device-2':(0,1),
+            'Device-3':(0,3), #this pos will change
             'Device-4':(2,1), #Till here every thing is OK below are arbtary location please confirm.
             
-            'Device-5':(2,3), #check
-            'Device-6':(3,0), #check
-            'Device-7':(3,3)  #check
+            'Device-5':(2,2), #check
+            'Device-6':(2,3), #check
+            'Device-7':(3,2)  #check
            }
 
 #....................................................................................................#
@@ -79,7 +79,7 @@ def Extrapolate(grid,dev,rc):
     dev_feat = {}
     pre_processed=dict(grid_feat.T)
     for k, v in pre_processed.items():
-        dev_feat[k] = dict(v)
+        dev_feat[str(k)] = dict(v)
     
     return (
             dev_feat,  #Actual Grid Features in nested dict format
@@ -100,10 +100,10 @@ def timezone(hour):
         return 'Evening'
 
 #Get database record object for a date & hour................................
-def get_database_record(date,hour):
+def get_database_record(date,hour,effective_date,effective_hour):
 
     #df=pd.read_csv('./logs/crawl_data_test.csv') #<--Here call the Crawler
-    df=crawler(date+" "+hour)#.................................................
+    df=crawler(effective_date+" "+effective_hour)#...so for hh hour call we are seeing hh-1 hour data.and eff_date works for 0th hour
     
 
     grid_dev=[device_pos[d] for d in df.Device] #Current device positions which are active
