@@ -1,7 +1,6 @@
 import datetime
 from time import sleep
 import numpy as np
-import requests
 import pymongo
 from pymongo import MongoClient
 from recommendation_engine import get_paths_recommended_defaults,get_paths_recommended_on_alpha
