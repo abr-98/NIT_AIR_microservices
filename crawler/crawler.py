@@ -12,6 +12,7 @@ device_path="/download/IOT_data/"
 
 #Flush download folder
 def flush_memo():
+    print('Deleting previous downloads...')
     fldrs=[meteoblue_path[1:],device_path[1:]] #delete from these folders
     for fldr in fldrs:
         files=os.listdir(fldr)
@@ -21,6 +22,7 @@ def flush_memo():
 
 #Meteology Data Crawler
 def crawler_meteoblue():
+    print('Downloading meteoblue data....')
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+meteoblue_path,
@@ -34,7 +36,6 @@ def crawler_meteoblue():
     driver.get("https://www.meteoblue.com/en/products/historyplus/download/durgapur_india_1272175")
 
     driver.find_element_by_xpath("/html/body/div[2]/div/form/div/input").click() #accept and continue
-    #button=driver.find_element_by_class_name("bloo")
 
     ######Click on checkbox#########
     
@@ -69,6 +70,7 @@ def crawler_meteoblue():
 
 #Process downloaded meteoblueDATA
 def pre_process_meteoblue(date_in):# i.e 2020-12-29 11
+    print('Processing meteo data...')
     file=os.listdir(curr_dir+meteoblue_path)[0]
     df=pd.read_excel(curr_dir+meteoblue_path+file)
     
@@ -99,13 +101,20 @@ def pre_process_meteoblue(date_in):# i.e 2020-12-29 11
     required_data.columns=rename_columns #Rename columns
     
     if len(required_data)==0:
-        required_data.loc[0]=[np.nan]*5 #if entry not found then fill NaN
+        #if current data is not there use the nearest past meteo_data
+        print('Meteoblue site is down so, data not available for this hour....using past data...')
+        required_data=pd.read_csv("./logs/past_available_meteo_data.csv")
+        #required_data.loc[0]=[np.nan]*5 #if entry not found then fill NaN
+    else:
+        #if data is there store it for use in case of data unavailablity
+        required_data.to_csv("./logs/past_available_meteo_data.csv",index=False)
     
     return required_data.mean(axis=0)  #returns a Series Object
 
 
 #SineTech IoT device DATA crawler
 def crawler_IOT():
+    print('Downloading Device data...')
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+device_path,
@@ -119,8 +128,6 @@ def crawler_IOT():
     driver = webdriver.Chrome(chrome_options=chromeOptions)
     driver.get("http://iotbuilder.in/nit-dp/dashboard.php")
     
-    #button=driver.find_element_by_class_name("col-md-12")
-    #butt=button.find_element_by_class_name("text-center")
     links = driver.find_elements_by_link_text('Save')
     for link in links:
         link.click()
@@ -149,6 +156,7 @@ def process_device(folder,device,date_in):
 
 #For all devices
 def preprocess_IOT(meteo_data,date_in):
+    print('Processing Device data...')
     folder=device_path[1:-1]
     devices=['Device-1.xls','Device-2.xls','Device-3.xls','Device-4.xls',
              'Device-5.xls','Device-6.xls','Device-7.xls']  #List for devices  ** increase if new devices are added

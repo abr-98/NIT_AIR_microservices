@@ -48,10 +48,18 @@ def get_contribution_vec(grid_dev,x,y):
             vec[i]=eucledine(a,b,x,y)
     return vec
 
+def cal_AQI_pm2_5(value): #AQI calculation function for pm2.5
+    if(value<60):
+        aqi = 1 #class 1
+    elif(value<120):
+        aqi = 2 #class 2
+    else:
+        aqi = 3 #class 3
+    return aqi
 
 #Extrapolation Function : inverse-Linear Extrapolation 
 def Extrapolate(grid,dev,rc):
-
+    print('Extrapolating features for prediction...')
     #interpolating w.r.to distance vec for each point.
 
     extrapol=[]
@@ -66,7 +74,9 @@ def Extrapolate(grid,dev,rc):
     grid_extended_data=pd.DataFrame(extrapol) #Extrapolated data
     
     #*** Get Actual AQI values Here ^^^ from Dist (PM2.5) columns
-    real_AQI=np.random.randint(1,4,16) #DUMMY....HAVE TO CAL FROM grid_extended['Dust (PM2.5)']...<<<<<<<<<
+    #real_AQI=np.random.randint(1,4,16) #DUMMY....HAVE TO CAL FROM grid_extended_data['Dust (PM2.5)']...<<<<<<<<<
+    #Actual AQIs are
+    real_AQI=grid_extended_data['Dust (PM2.5)'].apply(cal_AQI_pm2_5).values
 
     #RandomForest Predictions
     grid_feat=grid_extended_data[feat_cols] #Extrapolated Features
@@ -105,8 +115,8 @@ def get_database_record(date,hour,effective_date,effective_hour):
     df=crawler(effective_date+" "+effective_hour)#...so for hh hour call we are seeing hh-1 hour data.and eff_date works for 0th hour
     
     if df.shape[0]==0: #dropna drops everything so most probably meteoblue site is down currently...
-        print("Meteoblue site is probably down or no device is running at this time")
-        raise Exception("Meteoblue site is probably down or no device is running at this time")
+        print("No device is running at this time....")
+        raise Exception("No device is running at this time...")
 
     grid_dev=[device_pos[d] for d in df.Device] #Current device positions which are active
 

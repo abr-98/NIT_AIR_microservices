@@ -5,7 +5,7 @@ import pymongo
 from pymongo import MongoClient
 from Extrapolator import get_database_record
 
-
+print('Connecting to mongo Server...')
 mongo_client=MongoClient("mongo",27017)
 mongo_db=mongo_client["mydb"]
 mongo_db_collection=mongo_db["data"]
