@@ -28,4 +28,4 @@ ENV TZ=Asia/Calcutta
 
 #EXPOSE 5000
 
-CMD ["python","-u","time_scheduler.py"]
+CMD ["python","-W","ignore","-u","time_scheduler.py"] #ignore warnings and also unbuffered output

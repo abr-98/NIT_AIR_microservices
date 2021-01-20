@@ -11,17 +11,6 @@ mongo_db=mongo_client["mydb"]
 mongo_db_collection=mongo_db["data"]
 
 
-
-#date hour logger for past database store.
-def logger(mode='write',timestamp=None):
-    if mode=='write':
-        f = open("./logs/ts_log.txt", "w")
-        f.write(timestamp)
-        f.close()
-    elif mode=='read':
-        f = open("./logs/ts_log.txt", "r")
-        return f.read()
-
 #get date hour
 def get_date_hour_and_effective_date_hour():
     d=datetime.datetime.today()
@@ -36,24 +25,23 @@ def get_date_hour_and_effective_date_hour():
 def wait_for_next_hour():
     d=datetime.datetime.today()
     sleep_time=(3600-((d.minute*60)+d.second))
-    print(f"Sleeping for {sleep_time} Seconds")
+    print(f"Sleeping for {sleep_time} Seconds....will continue in next hour...\n\n")
     sleep(sleep_time)
 
 def check_if_on_past_record_hour():
     date,hour,_,_=get_date_hour_and_effective_date_hour()
-    if logger(mode='read')==(date+" "+hour): #yyyy-mm-dd hh
-        print("Record Exist so shoud wait for new hour.")
+    data=mongo_db_collection.find_one({'date':date,'hour':hour},{'_id':0,'all_pos_feat':0}) #query db
+    if data!=None: #if data is returned
+        print("Record Exist so should wait for new hour...")
         return True #if rerun on same hour then for skipping perpose return true
-    else:
-        print("Record need to be stored")
+    else: #if None is returned so, data not exist yet
+        print("Record need to be stored...")
         return False #otherwise for new record don't skip
 
 
 def store_to_db_and_log_to_file(date,hour,record):
-    mongo_db_collection.insert(record)
-    print("Data Recorded")
-    logger(mode='write',timestamp=(date+" "+hour))
-    print(f"Date {date} hour {hour} logged")
+    mongo_db_collection.insert(record) #record inserted
+    print(f"Data Recorded to mongo DB...for Date {date} hour {hour}...")
 
 
     
@@ -72,7 +60,7 @@ while True:
             continue
 
         
-        print(record) #store in db here
+        #print(record) #store in db here
         store_to_db_and_log_to_file(date,hour,record)
         
     wait_for_next_hour()
