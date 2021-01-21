@@ -51,8 +51,8 @@ while True:
         date,hour,effective_date,effective_hour=get_date_hour_and_effective_date_hour()
         try:
             record=get_database_record(date,hour,effective_date,effective_hour)
-        except:
-            error_message="Some issue with Extrapolator or Crawler....please Fix soon...retrying for now"
+        except Exception as e:
+            error_message=f"Some issue with Extrapolator or Crawler....please Fix soon...retrying for now\n{e}"
             print(error_message)
             requests.get(f"http://mail:5000/notify?message={error_message}")
             print("Wait for 10 mins to resolve")
