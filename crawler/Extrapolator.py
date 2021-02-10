@@ -49,13 +49,18 @@ def get_contribution_vec(grid_dev,x,y):
     return vec
 
 def cal_AQI_pm2_5(value): #AQI calculation function for pm2.5
-    if(value<60):
-        aqi = 1 #class 1
-    elif(value<120):
-        aqi = 2 #class 2
+    if value<=30:
+        return 1 #class1
+    elif value<=60:
+        return 2 #class2
+    elif value<=90:
+        return 3 #class3
+    elif value<=120:
+        return 4 #class4
+    elif value<=250:
+        return 5 #class5
     else:
-        aqi = 3 #class 3
-    return aqi
+        return 5 #merging class 5 & 6 togather
 
 #Extrapolation Function : inverse-Linear Extrapolation 
 def Extrapolate(grid,dev,rc):
