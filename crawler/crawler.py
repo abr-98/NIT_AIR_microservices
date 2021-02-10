@@ -156,13 +156,20 @@ def crawler_IOT():
 
     for e in l:
         click_element(driver,e)
-        
+    
+    hang=False
+    wait_time=0
     while sum([os.path.exists(curr_dir+device_path+f'Device-{e}.xls') for e in range(1,8)])<7: #currently wait for 7
         print("Waiting for downloads to complete!! for all devices")
         sleep(10) #sleeping for 10 sec
+        wait_time+=10
+        if wait_time>2*60: #max download waiting time 2 mins
+            print("IOT DATA download Hanged!!")
+            hang=True
+            break
         #pass #wait for the devices to complete download all 7 devices now may increase in future.
         
-    return driver
+    return driver,hang #if data download is hanged the True
 
 
 #Process IoT Data
@@ -206,12 +213,16 @@ def crawler(date_in=None): #date_in ="yyyy-mm-dd hh"
     meteo_site=crawler_meteoblue() #download meteoble data
     
     #3.
-    iot_dev_site=crawler_IOT() #download SineTech IoT device data
+    iot_dev_site,hang=crawler_IOT() #download SineTech IoT device data
     
     #23~
     meteo_site.close() #close webdriver handler
     iot_dev_site.close() #close webdriver handler
     
+    #3.5 Hang Handler
+    if hang:
+        raise Exception("IOT DATA download Hanged!!")
+
     #4.
     meteo_data=pre_process_meteoblue(date_in) #processing meteoblue data
     
