@@ -127,10 +127,34 @@ def crawler_IOT():
     
     driver = webdriver.Chrome(chrome_options=chromeOptions)
     driver.get("http://iotbuilder.in/nit-dp/dashboard.php")
-    
-    links = driver.find_elements_by_link_text('Save')
-    for link in links:
-        link.click()
+
+    def click_element(driver,e_xpath):
+        i=0
+        while True:
+            try:
+                i+=1 #no of click attampts
+                elem=driver.find_element_by_xpath(e_xpath)
+                elem.click()
+                print("Clicked!!")
+                return
+            except:
+                if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
+                    error_message="No internet OR IOT builder site Changed fix the crawler immediately and restart the container"
+                    requests.get(f"http://mail:5000/notify?message={error_message}")
+                    raise Exception(error_message)
+    l=[
+        "/html/body/div[4]/div[1]/div[1]/div/a[2]", #dev2
+        "/html/body/div[4]/div[1]/div[2]/div/a[2]", #dev4
+        "/html/body/div[4]/div[1]/div[3]/div/a[2]", #dev1
+        "/html/body/div[4]/div[1]/div[4]/div/a[2]", #dev7
+        "/html/body/div[4]/div[1]/div[5]/div/a[2]", #dev5
+        "/html/body/div[4]/div[1]/div[6]/div/a[2]", #dev8
+        "/html/body/div[4]/div[1]/div[7]/div/a[2]", #dev6
+        "/html/body/div[4]/div[1]/div[8]/div/a[2]"  #dev3
+    ]
+
+    for e in l:
+        click_element(driver,e)
         
     while sum([os.path.exists(curr_dir+device_path+f'Device-{e}.xls') for e in range(1,8)])<7: #currently wait for 7
         pass #wait for the devices to complete download all 7 devices now may increase in future.
