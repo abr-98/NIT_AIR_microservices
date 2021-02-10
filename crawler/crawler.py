@@ -2,6 +2,7 @@ import os
 import requests
 import numpy as np
 import pandas as pd
+from time import sleep
 from selenium import webdriver
 
 
@@ -135,7 +136,7 @@ def crawler_IOT():
                 i+=1 #no of click attampts
                 elem=driver.find_element_by_xpath(e_xpath)
                 elem.click()
-                print("Clicked!!")
+                #print("Clicked!!")
                 return
             except:
                 if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
@@ -157,7 +158,9 @@ def crawler_IOT():
         click_element(driver,e)
         
     while sum([os.path.exists(curr_dir+device_path+f'Device-{e}.xls') for e in range(1,8)])<7: #currently wait for 7
-        pass #wait for the devices to complete download all 7 devices now may increase in future.
+        print("Waiting for downloads to complete!! for all devices")
+        sleep(10) #sleeping for 10 sec
+        #pass #wait for the devices to complete download all 7 devices now may increase in future.
         
     return driver
 
