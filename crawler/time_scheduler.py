@@ -55,8 +55,8 @@ while True:
             error_message=f"Some issue with Extrapolator or Crawler....please Fix soon...retrying for now\n{e}"
             print(error_message)
             requests.get(f"http://mail:5000/notify?message={error_message}")
-            print("Wait for 10 mins to resolve")
-            sleep(10*60) #wait for 10 minutes
+            print("Wait for 1 mins to resolve")
+            sleep(1*60) #wait for 10 minutes
             continue
 
         
