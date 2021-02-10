@@ -9,7 +9,12 @@
     # {this will build the image according to the "Dockerfile" in here and name the image "mail" & the "." is important}
 
 2. Run the image
+    + docker run --name=mail -p 5000:5000 -d mail
+    # for testing port is forwarded
+    
     + docker run --name=mail -d mail
+    # for deployment no port is forwarded
+
     + while deploying add a aurgument --restart=always to make the container restart itself after a reboot
 
     # {this will run docker image "mail",also name the running container as "mail" and don expose port 5000 to 1234 at localhost(for Crawler module) and to its local network & we need to connect to docker network later and this is to be called from other containers for mail requests. #No port forwarding in deployment
@@ -21,4 +26,4 @@
 
 
 # Example EMAIL Send Request.
-mail:5000/notify?emails=abcdef@gmail.com_ghijk@gmail.com&message=hello this is a test email
+http://mail:5000/notify?message=hello this is a test email

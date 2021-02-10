@@ -4,24 +4,12 @@ import requests
 import pymongo
 from pymongo import MongoClient
 from Extrapolator import get_database_record
-from email_list import report_emails
 
-
+print('Connecting to mongo Server...')
 mongo_client=MongoClient("mongo",27017)
 mongo_db=mongo_client["mydb"]
 mongo_db_collection=mongo_db["data"]
 
-
-
-#date hour logger for past database store.
-def logger(mode='write',timestamp=None):
-    if mode=='write':
-        f = open("./logs/ts_log.txt", "w")
-        f.write(timestamp)
-        f.close()
-    elif mode=='read':
-        f = open("./logs/ts_log.txt", "r")
-        return f.read()
 
 #get date hour
 def get_date_hour_and_effective_date_hour():
@@ -37,24 +25,23 @@ def get_date_hour_and_effective_date_hour():
 def wait_for_next_hour():
     d=datetime.datetime.today()
     sleep_time=(3600-((d.minute*60)+d.second))
-    print(f"Sleeping for {sleep_time} Seconds")
+    print(f"Sleeping for {sleep_time} Seconds....will continue in next hour...\n\n")
     sleep(sleep_time)
 
 def check_if_on_past_record_hour():
     date,hour,_,_=get_date_hour_and_effective_date_hour()
-    if logger(mode='read')==(date+" "+hour): #yyyy-mm-dd hh
-        print("Record Exist so shoud wait for new hour.")
+    data=mongo_db_collection.find_one({'date':date,'hour':hour},{'_id':0,'all_pos_feat':0}) #query db
+    if data!=None: #if data is returned
+        print("Record Exist so should wait for new hour...")
         return True #if rerun on same hour then for skipping perpose return true
-    else:
-        print("Record need to be stored")
+    else: #if None is returned so, data not exist yet
+        print("Record need to be stored...")
         return False #otherwise for new record don't skip
 
 
 def store_to_db_and_log_to_file(date,hour,record):
-    mongo_db_collection.insert(record)
-    print("Data Recorded")
-    logger(mode='write',timestamp=(date+" "+hour))
-    print(f"Date {date} hour {hour} logged")
+    mongo_db_collection.insert(record) #record inserted
+    print(f"Data Recorded to mongo DB...for Date {date} hour {hour}...")
 
 
     
@@ -64,16 +51,16 @@ while True:
         date,hour,effective_date,effective_hour=get_date_hour_and_effective_date_hour()
         try:
             record=get_database_record(date,hour,effective_date,effective_hour)
-        except:
-            error_message="Some issue with Extrapolator or Crawler....please Fix soon...retrying for now"
+        except Exception as e:
+            error_message=f"Some issue with Extrapolator or Crawler....please Fix soon...retrying for now\n{e}"
             print(error_message)
-            requests.get(f"http://mail:5000/notify?emails={report_emails}&message={error_message}")
-            print("Wait for 10 mins to resolve")
-            sleep(10*60) #wait for 10 minutes
+            requests.get(f"http://mail:5000/notify?message={error_message}")
+            print("Wait for 1 mins to resolve")
+            sleep(1*60) #wait for 10 minutes
             continue
 
         
-        print(record) #stroe in db here
+        #print(record) #store in db here
         store_to_db_and_log_to_file(date,hour,record)
         
     wait_for_next_hour()

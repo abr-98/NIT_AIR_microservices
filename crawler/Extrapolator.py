@@ -2,7 +2,6 @@ import pickle
 import numpy as np
 import pandas as pd
 from crawler import crawler
-from email_list import report_emails
 from sklearn.metrics import accuracy_score
 
 eucledine=lambda a,b,c,d:round(((a-c)**2+(b-d)**2)**0.5,2)
@@ -22,14 +21,14 @@ feat_cols=[
 ]
 
 #Device Cordinate Mappings
-device_pos={'Device-1':(1,3),
-            'Device-2':(0,0),
-            'Device-3':(3,2),
+device_pos={'Device-1':(0,0),
+            'Device-2':(0,1),
+            'Device-3':(0,3), #this pos will change
             'Device-4':(2,1), #Till here every thing is OK below are arbtary location please confirm.
             
-            'Device-5':(2,3), #check
-            'Device-6':(3,0), #check
-            'Device-7':(3,3)  #check
+            'Device-5':(2,2), #check
+            'Device-6':(2,3), #check
+            'Device-7':(3,2)  #check
            }
 
 #....................................................................................................#
@@ -49,10 +48,23 @@ def get_contribution_vec(grid_dev,x,y):
             vec[i]=eucledine(a,b,x,y)
     return vec
 
+def cal_AQI_pm2_5(value): #AQI calculation function for pm2.5
+    if value<=30:
+        return 1 #class1
+    elif value<=60:
+        return 2 #class2
+    elif value<=90:
+        return 3 #class3
+    elif value<=120:
+        return 4 #class4
+    elif value<=250:
+        return 5 #class5
+    else:
+        return 5 #merging class 5 & 6 togather
 
 #Extrapolation Function : inverse-Linear Extrapolation 
 def Extrapolate(grid,dev,rc):
-
+    print('Extrapolating features for prediction...')
     #interpolating w.r.to distance vec for each point.
 
     extrapol=[]
@@ -67,7 +79,9 @@ def Extrapolate(grid,dev,rc):
     grid_extended_data=pd.DataFrame(extrapol) #Extrapolated data
     
     #*** Get Actual AQI values Here ^^^ from Dist (PM2.5) columns
-    real_AQI=np.random.randint(1,4,16) #DUMMY....HAVE TO CAL FROM grid_extended['Dust (PM2.5)']...<<<<<<<<<
+    #real_AQI=np.random.randint(1,4,16) #DUMMY....HAVE TO CAL FROM grid_extended_data['Dust (PM2.5)']...<<<<<<<<<
+    #Actual AQIs are
+    real_AQI=grid_extended_data['Dust (PM2.5)'].apply(cal_AQI_pm2_5).values
 
     #RandomForest Predictions
     grid_feat=grid_extended_data[feat_cols] #Extrapolated Features
@@ -105,6 +119,9 @@ def get_database_record(date,hour,effective_date,effective_hour):
     #df=pd.read_csv('./logs/crawl_data_test.csv') #<--Here call the Crawler
     df=crawler(effective_date+" "+effective_hour)#...so for hh hour call we are seeing hh-1 hour data.and eff_date works for 0th hour
     
+    if df.shape[0]==0: #dropna drops everything so most probably meteoblue site is down currently...
+        print("No device is running at this time....")
+        raise Exception("No device is running at this time...")
 
     grid_dev=[device_pos[d] for d in df.Device] #Current device positions which are active
 

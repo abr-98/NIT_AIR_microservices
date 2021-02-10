@@ -2,8 +2,8 @@ import os
 import requests
 import numpy as np
 import pandas as pd
+from time import sleep
 from selenium import webdriver
-from email_list import report_emails
 
 
 curr_dir=os.getcwd()
@@ -13,6 +13,7 @@ device_path="/download/IOT_data/"
 
 #Flush download folder
 def flush_memo():
+    print('Deleting previous downloads...')
     fldrs=[meteoblue_path[1:],device_path[1:]] #delete from these folders
     for fldr in fldrs:
         files=os.listdir(fldr)
@@ -22,6 +23,7 @@ def flush_memo():
 
 #Meteology Data Crawler
 def crawler_meteoblue():
+    print('Downloading meteoblue data....')
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+meteoblue_path,
@@ -35,7 +37,6 @@ def crawler_meteoblue():
     driver.get("https://www.meteoblue.com/en/products/historyplus/download/durgapur_india_1272175")
 
     driver.find_element_by_xpath("/html/body/div[2]/div/form/div/input").click() #accept and continue
-    button=driver.find_element_by_class_name("bloo")
 
     ######Click on checkbox#########
     
@@ -50,7 +51,7 @@ def crawler_meteoblue():
             except:
                 if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
                     error_message="No internet OR Meteoblue site Changed fix the crawler immediately and restart the container"
-                    requests.get(f"http://mail:5000/notify?emails={report_emails}&message={error_message}")
+                    requests.get(f"http://mail:5000/notify?message={error_message}")
                     raise Exception(error_message)
 
     l=['//*[@id="params"]/optgroup[2]/option[3]',
@@ -70,6 +71,7 @@ def crawler_meteoblue():
 
 #Process downloaded meteoblueDATA
 def pre_process_meteoblue(date_in):# i.e 2020-12-29 11
+    print('Processing meteo data...')
     file=os.listdir(curr_dir+meteoblue_path)[0]
     df=pd.read_excel(curr_dir+meteoblue_path+file)
     
@@ -100,13 +102,20 @@ def pre_process_meteoblue(date_in):# i.e 2020-12-29 11
     required_data.columns=rename_columns #Rename columns
     
     if len(required_data)==0:
-        required_data.loc[0]=[np.nan]*5 #if entry not found then fill NaN
+        #if current data is not there use the nearest past meteo_data
+        print('Meteoblue site is down so, data not available for this hour....using past data...')
+        required_data=pd.read_csv("./logs/past_available_meteo_data.csv")
+        #required_data.loc[0]=[np.nan]*5 #if entry not found then fill NaN
+    else:
+        #if data is there store it for use in case of data unavailablity
+        required_data.to_csv("./logs/past_available_meteo_data.csv",index=False)
     
     return required_data.mean(axis=0)  #returns a Series Object
 
 
 #SineTech IoT device DATA crawler
 def crawler_IOT():
+    print('Downloading Device data...')
     chromeOptions=webdriver.ChromeOptions()
     
     prefs = {"download.default_directory" : curr_dir+device_path,
@@ -119,17 +128,48 @@ def crawler_IOT():
     
     driver = webdriver.Chrome(chrome_options=chromeOptions)
     driver.get("http://iotbuilder.in/nit-dp/dashboard.php")
+
+    def click_element(driver,e_xpath):
+        i=0
+        while True:
+            try:
+                i+=1 #no of click attampts
+                elem=driver.find_element_by_xpath(e_xpath)
+                elem.click()
+                #print("Clicked!!")
+                return
+            except:
+                if i>500:#max limit of clicking a button before haulting everything and shuts down the container.
+                    error_message="No internet OR IOT builder site Changed fix the crawler immediately and restart the container"
+                    requests.get(f"http://mail:5000/notify?message={error_message}")
+                    raise Exception(error_message)
+    l=[
+        "/html/body/div[4]/div[1]/div[1]/div/a[2]", #dev2
+        "/html/body/div[4]/div[1]/div[2]/div/a[2]", #dev4
+        "/html/body/div[4]/div[1]/div[3]/div/a[2]", #dev1
+        "/html/body/div[4]/div[1]/div[4]/div/a[2]", #dev7
+        "/html/body/div[4]/div[1]/div[5]/div/a[2]", #dev5
+        "/html/body/div[4]/div[1]/div[6]/div/a[2]", #dev8
+        "/html/body/div[4]/div[1]/div[7]/div/a[2]", #dev6
+        "/html/body/div[4]/div[1]/div[8]/div/a[2]"  #dev3
+    ]
+
+    for e in l:
+        click_element(driver,e)
     
-    button=driver.find_element_by_class_name("col-md-12")
-    butt=button.find_element_by_class_name("text-center")
-    links = driver.find_elements_by_link_text('Save')
-    for link in links:
-        link.click()
-        
+    hang=False
+    wait_time=0
     while sum([os.path.exists(curr_dir+device_path+f'Device-{e}.xls') for e in range(1,8)])<7: #currently wait for 7
-        pass #wait for the devices to complete download all 7 devices now may increase in future.
+        print("Waiting for downloads to complete!! for all devices")
+        sleep(10) #sleeping for 10 sec
+        wait_time+=10
+        if wait_time>2*60: #max download waiting time 2 mins
+            print("IOT DATA download Hanged!!")
+            hang=True
+            break
+        #pass #wait for the devices to complete download all 7 devices now may increase in future.
         
-    return driver
+    return driver,hang #if data download is hanged the True
 
 
 #Process IoT Data
@@ -150,6 +190,7 @@ def process_device(folder,device,date_in):
 
 #For all devices
 def preprocess_IOT(meteo_data,date_in):
+    print('Processing Device data...')
     folder=device_path[1:-1]
     devices=['Device-1.xls','Device-2.xls','Device-3.xls','Device-4.xls',
              'Device-5.xls','Device-6.xls','Device-7.xls']  #List for devices  ** increase if new devices are added
@@ -172,12 +213,16 @@ def crawler(date_in=None): #date_in ="yyyy-mm-dd hh"
     meteo_site=crawler_meteoblue() #download meteoble data
     
     #3.
-    iot_dev_site=crawler_IOT() #download SineTech IoT device data
+    iot_dev_site,hang=crawler_IOT() #download SineTech IoT device data
     
     #23~
     meteo_site.close() #close webdriver handler
     iot_dev_site.close() #close webdriver handler
     
+    #3.5 Hang Handler
+    if hang:
+        raise Exception("IOT DATA download Hanged!!")
+
     #4.
     meteo_data=pre_process_meteoblue(date_in) #processing meteoblue data
     
