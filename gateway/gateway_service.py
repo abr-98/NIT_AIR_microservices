@@ -54,3 +54,7 @@ def route_recommendation():         #"http://127.0.0.1:5000/route_recommendation
     else:
         res=requests.get(f"http://route:5000/recomm?source={source}&destination={destination}&alpha={alpha}")
         return res.content
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    return jsonify("NOT_FOUND")
