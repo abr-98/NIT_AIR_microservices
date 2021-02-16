@@ -1,4 +1,4 @@
-const BASE_URL = "http://gateway:5000";
+const BASE_URL = "http://172.18.0.7:5000"; //172.18.0.7 is the gateway ip address
 
 async function predByDateHour(dateTime) {
   let date = dateTime.split("T")[0];
