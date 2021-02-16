@@ -1,7 +1,7 @@
 import requests
 from flask import Flask,request,jsonify
 from flask_cors import CORS
-from helper_functions import get_pred_by_hour_day,get_pred_by_grid,get_pred_by_grid_weekly,get_pred_all_weekly,get_daily
+from helper_functions import get_pred_by_hour_day,get_pred_by_grid,get_pred_by_grid_weekly,get_pred_all_weekly,get_daily,format_data_for_group_bar_chart
 
 
 app = Flask(__name__) #Flask App
@@ -31,9 +31,13 @@ def get_pred_aqi_count_weekly():    #"http://127.0.0.1:5000/pred_aqi_count_weekl
     grid=None if request.args.get('grid')=="all" else int(request.args.get('grid'))
 
     if grid==None:
-        return jsonify(get_pred_all_weekly(date))
+        data=get_pred_all_weekly(date)
+        formated_data=format_data_for_group_bar_chart(data) #data is just formated here
+        return jsonify(formated_data)
     else:
-        return jsonify(get_pred_by_grid_weekly(grid,date))
+        data=get_pred_by_grid_weekly(grid,date)
+        formated_data=format_data_for_group_bar_chart(data) #data is just formated here
+        return jsonify(formated_data)
     
 
 @app.route("/whole_grid_daily_aqi_count") #PIE CHART Endpoint
@@ -57,4 +61,4 @@ def route_recommendation():         #"http://127.0.0.1:5000/route_recommendation
 
 @app.errorhandler(Exception)
 def handle_exception(e):
-    return jsonify("NOT_FOUND")
+    return jsonify("NOT_FOUND"),404
