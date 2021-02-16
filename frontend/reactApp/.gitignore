@@ -1,0 +1,8 @@
+package-lock.json
+node_modules/
+.eslintcache
+.env
+.env.example
+.env.local
+.env.staging
+.env.production
