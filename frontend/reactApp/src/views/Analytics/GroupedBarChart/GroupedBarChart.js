@@ -8,44 +8,8 @@ import "./GroupedBarChart.css";
 import BarChartDropdown from "./BarChartDropdown/BarChartDropdown";
 import { AQICountWeekly } from "utils/networkUtil";
 
-// const data = {
-//   labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"],
-//   datasets: [
-//     {
-//       label: colors[0].title,
-//       data: [3, 10, 13, 15, 22, 30, 23],
-//       backgroundColor: colors[0].color,
-//     },
-//     {
-//       label: colors[1].title,
-//       data: [3, 10, 13, 15, 22, 30, 23],
-//       backgroundColor: colors[1].color,
-//     },
-//     {
-//       label: colors[2].title,
-//       data: [2, 3, 20, 5, 1, 4, 2],
-//       backgroundColor: colors[2].color,
-//     },
-//     {
-//       label: colors[3].title,
-//       data: [12, 19, 3, 5, 2, 3, 3],
-//       backgroundColor: colors[3].color,
-//     },
-//     {
-//       label: colors[4].title,
-//       data: [12, 19, 3, 5, 2, 3, 3],
-//       backgroundColor: colors[4].color,
-//     },
-//   ],
-// };
-
 const options = {
   responsive: true,
-  //   title: {
-  //     display: true,
-  //     text: "Prediction Data",
-  //     fontSize: 27,
-  //   },
   scales: {
     yAxes: [
       {
@@ -99,7 +63,7 @@ const GroupedBarChart = () => {
     if (Date.parse(e.target.value) > new Date()) {
       alert("Choosen Date cannot be in future.");
     } else {
-      setdate(formatDate(e.target.value));
+      setdate(e.target.value);
     }
   };
 

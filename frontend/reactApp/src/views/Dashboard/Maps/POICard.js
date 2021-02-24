@@ -12,10 +12,8 @@ const POICard = (props) => {
   return (
     <Card
       style={{
-        ...styles.fullWidthStyle,
         ...props.style,
         margin:"10px",
-        width: "267px",
         height: "380px",
         float: "left",
       }}

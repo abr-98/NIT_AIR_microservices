@@ -1,10 +1,7 @@
 import React from "react";
-import { FixedSizeList } from "react-window";
-import ListItem from "@material-ui/core/ListItem";
 import { Card, Dropdown, Container, Row, Col } from "react-bootstrap";
 
 import POICard from "./POICard";
-import styles from "../../../styles/DashboardHeatMapPlotStyles";
 import { DashboardHeatmapContext } from "./HeatMapPlot";
 
 const POIListCard = () => {
@@ -58,7 +55,6 @@ const POIListCard = () => {
   React.useEffect(() => {
     let filterRes = sortListData(filteredArray, sortByFunctions[sortBy]);
     setFilteredArray(filterRes);
-    console.log(filteredArray);
   }, [sortBy]);
 
   return (
@@ -108,7 +104,7 @@ const POIListCard = () => {
         {predictionData && filteredArray.length !== 0 && (
           <div style={{ width: "100%" }}>
             {filteredArray.map((obj, idx) => (
-              <POICard poi={obj} key={idx} />
+              <POICard poi={obj} key={idx} style={{ width: "31%" }} />
             ))}
           </div>
         )}

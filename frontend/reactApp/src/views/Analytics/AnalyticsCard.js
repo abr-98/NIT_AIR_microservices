@@ -7,7 +7,7 @@ const AnalyticsCard = () => {
   return (
     <Card style={{ paddingBottom: "20px" }}>
       <Card.Header>
-        <Card.Title as="h4">Analytics</Card.Title>
+        <Card.Title as="h3"><strong>Analytics</strong></Card.Title>
         <p className="card-category">
           Air Quality Index Analysis over the area of interest
         </p>

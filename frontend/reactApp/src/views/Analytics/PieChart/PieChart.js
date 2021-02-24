@@ -28,7 +28,7 @@ const PieChart = () => {
     if (Date.parse(e.target.value) > new Date()) {
       alert("Choosen Date cannot be in future.");
     } else {
-      setdate(formatDate(e.target.value));
+      setdate(e.target.value);
     }
   };
 
@@ -79,7 +79,6 @@ const PieChart = () => {
       <Card.Body>
         <div
           className="ct-chart ct-perfect-fourth"
-          // style={{ width: "100%", height: "100%" }}
           id="chartPreferences"
         >
           <div className="date_input">

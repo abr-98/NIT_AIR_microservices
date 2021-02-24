@@ -71,7 +71,7 @@ const HeatMapPlot = () => {
   return (
     <Card style={{ paddingBottom: "20px" }}>
       <Card.Header>
-        <Card.Title as="h4">Hourly Air Quality Prediction</Card.Title>
+        <Card.Title as="h3"><strong>Hourly Air Quality Prediction</strong></Card.Title>
         <p className="card-category">24 hrs performance</p>
       </Card.Header>
       <Card.Body>

@@ -1,10 +1,9 @@
-const BASE_URL = "http://127.0.0.1:5000"; //172.18.0.7 is the gateway ip address
+const BASE_URL = "http://117.218.3.141:5000/";
 
 async function predByDateHour(dateTime) {
   let date = dateTime.split("T")[0];
   let hour = dateTime.split("T")[1].split(":")[0];
   let apiCallString = `${BASE_URL}/pred_by_date_hour?date=${date}&hour=${hour}`;
-  console.log(apiCallString);
   let response = await fetch(apiCallString);
   if (response.status == 200) {
     let predictionData = await response.json();
@@ -17,7 +16,6 @@ async function predByDateHour(dateTime) {
 async function predTableData(gridId, dateTime) {
   let date = dateTime.split("T")[0];
   let apiCallString = `${BASE_URL}/pred_table_data?grid=${gridId}&date=${date}`;
-  console.log(apiCallString);
   let response = await fetch(apiCallString);
   if (response.status == 200) {
     let data = await response.json();
@@ -40,7 +38,6 @@ const AQICountDaily = async (date) => {
 };
 
 const routeWithAlpha = async (source, dest, alpha) => {
-  // console.log(source, dest, alpha, "called");
   return await fetch(
     `${BASE_URL}/route_recommendation?source=${source.lat},${source.lng}&destination=${dest.lat},${dest.lng}&alpha=${alpha}`
   ).then((res) => res.json());

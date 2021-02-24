@@ -89,7 +89,7 @@ const MapComponent = (props) => {
                   <MarkerWithInfoWindow
                     key={"Marker" + idx}
                     position={poi.location}
-                    info={<POICard poi={poi} style={{ fontWeight: "500" }} />}
+                    info={<POICard poi={poi} style={{ fontWeight: "500", width: "267px" }} />}
                     icon={POIIcons[poi.poi_type]}
                   />
                 ))}
