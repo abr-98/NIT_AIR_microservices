@@ -1,5 +1,5 @@
 import { Container, Row, Col, Card } from "react-bootstrap";
-import MapLegendItem from "./MapLegendItem";
+import AQILegendItem from "./AQILegendItem";
 import styles from "../../../styles/DashboardHeatMapPlotStyles";
 import AQIcolors from "../../../constants/AQIcolors";
 
@@ -11,11 +11,14 @@ const MapLegendCard = () => {
         <Container>
           <Row style={{ display: "flex", justifyContent: "flex-start" }}>
             {AQIcolors.map((aqiClass, index) => (
-              <MapLegendItem
-                key={`MapLegend${index}`}
-                title={aqiClass.title}
-                color={aqiClass.color}
-              />
+              <div key={`MapLegendDiv${index}`} style={{ fontSize: "0.9em" }}>
+                <AQILegendItem
+                  key={`MapLegend${index}`}
+                  title={aqiClass.title}
+                  color={aqiClass.color}
+                  titleFirst={false}
+                />
+              </div>
             ))}
           </Row>
         </Container>

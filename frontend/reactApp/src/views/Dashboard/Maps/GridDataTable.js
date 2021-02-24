@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
-import MapLegendItem from "./MapLegendItem";
+import AQILegendItem from "./AQILegendItem";
 import AQIcolors from "../../../constants/AQIcolors";
 
 import { DashboardHeatmapContext } from "./HeatMapPlot";
@@ -42,7 +42,7 @@ const GridDataTable = (props) => {
             <th>#{props.gridId}</th>
             {AQIcolors.map((aqiClass, index) => (
               <th>
-                <MapLegendItem
+                <AQILegendItem
                   key={`MapLegend${index}`}
                   title={""}
                   color={aqiClass.color}

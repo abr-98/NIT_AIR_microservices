@@ -1,9 +1,22 @@
 import React from "react";
-import { Card, Image, Container, Row, Col } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 import getInfoBuilder from "../../../constants/POIInfoViewBuilder";
 import styles from "../../../styles/DashboardHeatMapPlotStyles";
+import AQILegendItem from "./AQILegendItem";
+import AQIcolors from "../../../constants/AQIcolors";
 import { DashboardHeatmapContext } from "./HeatMapPlot";
+
+const AQIClassToAQIColor = (aqiClassNumber) => {
+  const mapper = {
+    1: AQIcolors[0],
+    2: AQIcolors[1],
+    3: AQIcolors[2],
+    4: AQIcolors[3],
+    5: AQIcolors[4],
+  };
+  return mapper[aqiClassNumber];
+};
 
 const POICard = (props) => {
   const predictionData = React.useContext(DashboardHeatmapContext)
@@ -13,7 +26,7 @@ const POICard = (props) => {
     <Card
       style={{
         ...props.style,
-        margin:"10px",
+        margin: "10px",
         height: "380px",
         float: "left",
       }}
@@ -30,11 +43,22 @@ const POICard = (props) => {
       </Card.Header>
       <Card.Body>
         <div>
-          <div>
+          <div style={{ ...styles.fullWidthStyle, display: "inline-block" }}>
             AQI:
-            {predictionData[props.poi.grid_id]
-              ? ` ${predictionData[props.poi.grid_id]}`
-              : " NA"}
+            {predictionData[props.poi.grid_id] ? (
+              <AQILegendItem
+                key={`POIAQI${props.poi.name}`}
+                title={
+                  AQIClassToAQIColor(predictionData[props.poi.grid_id]).title
+                }
+                color={
+                  AQIClassToAQIColor(predictionData[props.poi.grid_id]).color
+                }
+                titleFirst={true}
+              />
+            ) : (
+              " NA"
+            )}
           </div>
           {getInfoBuilder(props.poi.poi_type)(props.poi)}
         </div>
