@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import * as Zoom from "chartjs-plugin-zoom";
 import colors from "constants/AQIcolors";
-import { Card } from "react-bootstrap";
+import { Card, Spinner } from "react-bootstrap";
 import formatDate from "utils/formatDate";
 import "./GroupedBarChart.css";
 import BarChartDropdown from "./BarChartDropdown/BarChartDropdown";
@@ -107,7 +107,7 @@ const GroupedBarChart = () => {
   }, [date, gridValue]);
 
   if (!barData) {
-    return <div>Loading...</div>;
+    return <Spinner size="md" animation="border" />;
   }
 
   return (

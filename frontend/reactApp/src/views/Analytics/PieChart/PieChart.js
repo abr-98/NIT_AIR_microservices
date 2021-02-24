@@ -1,6 +1,6 @@
 import colors from "constants/AQIcolors";
 import React, { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { Card, Spinner } from "react-bootstrap";
 import { Pie } from "react-chartjs-2";
 import formatDate from "utils/formatDate";
 import { AQICountDaily } from "utils/networkUtil";
@@ -69,7 +69,7 @@ const PieChart = () => {
     apiData();
   }, [date]);
 
-  if (!chartData) return <div>Loading...</div>;
+  if (!chartData) return <Spinner size="md" animation="border" />;
   return (
     <Card style={{ height: "100%" }}>
       <Card.Header>

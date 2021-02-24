@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import MapComponent from "./MapComponent";
 import MapLegendCard from "./MapLegendCard";
 import POIListCard from "./POIListCard";
@@ -90,7 +90,7 @@ const HeatMapPlot = () => {
                   />
                 </DashboardHeatmapContext.Provider>
               ) : (
-                "Loading Map..."
+                <Spinner size="md" animation="border" />
               )}
             </Col>
           </Row>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Spinner } from "react-bootstrap";
 
 import {
   GoogleMap,
@@ -47,7 +47,7 @@ const MapComponent = (props) => {
       <Row>
         <Col>
           {!isLoaded ? (
-            "Loading..."
+            <Spinner size="md" animation="border" />
           ) : (
             <StandaloneSearchBox
               onLoad={onSearchBoxLoad}

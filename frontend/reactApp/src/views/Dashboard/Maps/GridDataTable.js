@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Spinner } from "react-bootstrap";
 
 import AQILegendItem from "./AQILegendItem";
 import AQIcolors from "../../../constants/AQIcolors";
@@ -33,7 +33,7 @@ const GridDataTable = (props) => {
   }, [isLoading]);
 
   return isLoading ? (
-    <p>Loading Data...</p>
+    <Spinner size="md" animation="border" />
   ) : (
     gridData && (
       <Table bordered>

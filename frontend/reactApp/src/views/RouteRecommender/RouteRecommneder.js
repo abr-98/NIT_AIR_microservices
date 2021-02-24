@@ -52,6 +52,18 @@ const pathOptions = {
 
 Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
+const getPlaceName = (placeObject) => {
+  if (
+    placeObject.types.includes("point_of_interest") ||
+    placeObject.types.includes["establishment"] ||
+    placeObject.types.includes("university")
+  ) {
+    return `${placeObject.name}, ${placeObject.formatted_address}`;
+  } else {
+    return `${placeObject.formatted_address}`;
+  }
+};
+
 const RouteRecommender = () => {
   const [checkboxVal, setCheckboxVal] = useState(false);
   const [autoCompleteSource, setautoCompleteSource] = useState(null);
@@ -177,7 +189,6 @@ const RouteRecommender = () => {
     } else {
       setCheckboxVal(true);
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position, "currenpos");
         setCurrentpos({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -189,7 +200,9 @@ const RouteRecommender = () => {
   return (
     <Card className="root">
       <Card.Header>
-        <Card.Title as="h3"><strong>Route Recommendation</strong></Card.Title>
+        <Card.Title as="h3">
+          <strong>Route Recommendation</strong>
+        </Card.Title>
       </Card.Header>
       <Card.Body>
         <Container fluid="md">
@@ -241,8 +254,7 @@ const RouteRecommender = () => {
                     onPlaceChanged={() => {
                       if (autoCompleteSource !== null) {
                         setCurrentPosName(
-                          autoCompleteSource.gm_accessors_.place.Le
-                            .formattedPrediction
+                          getPlaceName(autoCompleteSource.getPlace())
                         );
                         setCurrentpos({
                           lat: autoCompleteSource
@@ -294,8 +306,7 @@ const RouteRecommender = () => {
                     onPlaceChanged={() => {
                       if (autoCompleteDest !== null) {
                         setDestinationName(
-                          autoCompleteDest.gm_accessors_.place.Le
-                            .formattedPrediction
+                          getPlaceName(autoCompleteDest.getPlace())
                         );
                         setDestination({
                           lat: autoCompleteDest
