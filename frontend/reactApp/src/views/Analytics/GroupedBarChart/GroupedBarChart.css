@@ -1,0 +1,27 @@
+.root_div {
+  display: flex;
+}
+
+.card_headers {
+  display: flex;
+  flex-direction: column;
+}
+
+.date_input {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  margin-top: 0.5%;
+}
+
+.grid_select_dropdown {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  margin-top: 0.5%;
+}
+
+.grid_select_dropdown_label {
+  margin-left: 12%;
+  width: 100%;
+}

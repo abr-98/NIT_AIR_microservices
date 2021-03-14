@@ -60,6 +60,18 @@ def get_hour_wise_all(date):
             date_aqi[class_]+=1
     return list(date_aqi.values())
 
+
+def format_data_for_group_bar_chart(data):
+    dic={
+            "days":list(data.keys()),
+            "AQI1": [List[0] for List in data.values()],
+            "AQI2": [List[1] for List in data.values()],
+            "AQI3": [List[2] for List in data.values()],
+            "AQI4": [List[3] for List in data.values()],
+            "AQI5": [List[4] for List in data.values()]
+        }
+    return dic
+
 #######################################################################################################################
 
 #ENDPOINTS###

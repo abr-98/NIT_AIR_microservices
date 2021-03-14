@@ -1,0 +1,58 @@
+----  Routes in maps ----
+    {destination && (
+                <DirectionsService
+                  // required
+                  options={{
+                    destination,
+                    origin: currentpos,
+                    travelMode: "WALKING",
+                  }}
+                  // required
+                  callback={directionsCallback}
+                  // optional
+                  onLoad={(directionsService) => {
+                    console.log(
+                      "DirectionsService onLoad directionsService: ",
+                      directionsService
+                    );
+                  }}
+                  // optional
+                  onUnmount={(directionsService) => {
+                    console.log(
+                      "DirectionsService onUnmount directionsService: ",
+                      directionsService
+                    );
+                  }}
+                />
+              )}
+              {destination && (
+                <DirectionsRenderer
+                  // required
+                  options={{
+                    directions: response,
+                  }}
+                  // optional
+                  onLoad={(directionsRenderer) => {
+                    console.log(
+                      "DirectionsRenderer onLoad directionsRenderer: ",
+                      directionsRenderer
+                    );
+                  }}
+                  // optional
+                  onUnmount={(directionsRenderer) => {
+                    console.log(
+                      "DirectionsRenderer onUnmount directionsRenderer: ",
+                      directionsRenderer
+                    );
+                  }}
+                />
+              )} 
+
+
+    ---- Icon Markers ----
+    // icon={{
+                //   url: "/logo.svg",
+                //   scaledSize: new window.google.maps.Size(50, 50),
+                //   origin: new window.google.maps.Point(0, 0),
+                //   anchor: new window.google.maps.Point(25, 25),
+                // }}   

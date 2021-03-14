@@ -1,0 +1,11 @@
+.date_input {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  /* margin-top: 0.5%; */
+  /* margin-bottom: 10%; */
+}
+
+.date_input_label {
+  margin-bottom: 5%;
+}
